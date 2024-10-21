@@ -44,6 +44,7 @@ Follow the steps below to set up and run the project locally:
 
    Run the following command to create the database and apply migrations:
    ```bash
+   python manage.py makemigrations
    python manage.py migrate
 
 4. **Run the Development Server**
