@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+    <script>
+        function showFields() {
+            const splitMethod = document.getElementById('split_method').value;
+            const equalFields = document.getElementById('equal_fields');
+            const exactFields = document.getElementById('exact_fields');
+            const percentageFields = document.getElementById('percentage_fields');
+
+            if (splitMethod === 'equal') {
+                equalFields.style.display = 'block';
+                exactFields.style.display = 'none';
+                percentageFields.style.display = 'none';
+            } else if (splitMethod === 'exact') {
+                equalFields.style.display = 'none';
+                exactFields.style.display = 'block';
+                percentageFields.style.display = 'none';
+            } else if (splitMethod === 'percentage') {
+                equalFields.style.display = 'none';
+                exactFields.style.display = 'none';
+                percentageFields.style.display = 'block';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Add Expense</h2>
+    <form action="{% url 'add_expense' %}" method="POST">
+        {% csrf_token %}
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" name="description" required><br><br>
+
+        <label for="total_amount">Total Amount:</label><br>
+        <input type="number" id="total_amount" name="total_amount" required><br><br>
+
+        <label for="split_method">Split Method:</label><br>
+        <select id="split_method" name="split_method" onchange="showFields()" required>
+            <option value="">Select a split method</option>
+            <option value="equal">Equal</option>
+            <option value="exact">Exact</option>
+            <option value="percentage">Percentage</option>
+        </select><br><br>
+
+        <!-- Equal Split Fields -->
+        <div id="equal_fields" style="display:none;">
+            <label for="users_equal">Users (comma separated names):</label><br>
+            <input type="text" id="users_equal" name="users_equal" placeholder="ABC, ABC123"><br><br>
+        </div>
+
+        <!-- Exact Split Fields -->
+        <div id="exact_fields" style="display:none;">
+            <label for="exact_users">Users and Amount Owed (Format: Name:Amount, Name:Amount):</label><br>
+            <textarea id="exact_users" name="exact_users" placeholder="ABC:500, ABC123:1500"></textarea><br><br>
+        </div>
+
+        <!-- Percentage Split Fields -->
+        <div id="percentage_fields" style="display:none;">
+            <label for="percentage_users">Users and Percentage (Format: Name:Percentage, Name:Percentage):</label><br>
+            <textarea id="percentage_users" name="percentage_users" placeholder="ABC:50, ABC123:50"></textarea><br><br>
+        </div>
+
+        <button type="submit">Add Expense</button>
+    
+    </form>
+    <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
